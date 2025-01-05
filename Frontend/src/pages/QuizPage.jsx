@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from "react";
 import QuizCard from "../components/QuizCard";
 import { getQuizQuestions } from "../services/quizService";
+import ClipLoader from "react-spinners/ClipLoader"; // Import the loader
 
 const QuizPage = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [loading, setLoading] = useState(true); // Track loading state
 
   useEffect(() => {
     async function fetchQuestions() {
+      setLoading(true);
       const data = await getQuizQuestions();
       setQuestions(data);
+      setLoading(false);
     }
     fetchQuestions();
   }, []);
 
-  if (questions.length === 0) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <ClipLoader color="#EF4444" size={80} />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-xl p-8 w-11/12 md:w-3/4 lg:w-2/3">
